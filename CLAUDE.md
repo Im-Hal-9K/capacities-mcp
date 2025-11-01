@@ -32,10 +32,15 @@ cp .env.example .env
 - `capacities_get_space_info` - Get structures and collections for a space
 - `capacities_search` - Search content across spaces
   - `mode` defaults to "title" if not specified
+- `capacities_read_object_content` - Retrieve full content of an object by ID
+  - Parameters: `objectId` (UUID), `spaceId` (UUID), `title` (optional string)
+  - How it works: Tries undocumented endpoints first, then falls back to search API aggregation
+  - Note: Providing `title` parameter greatly improves search results
+  - Returns aggregated content from search snippets when direct endpoint unavailable
 - `capacities_save_weblink` - Save a web link to a space
   - Parameters: `titleOverwrite`, `descriptionOverwrite`, `tags`, `mdText`
 - `capacities_save_to_daily_note` - Add text to today's daily note
-  - `origin` only accepts "commandPalette" 
+  - `origin` only accepts "commandPalette"
   - Use `noTimestamp: true` to skip timestamp
 
 ## Available Prompts

@@ -9,6 +9,7 @@ This MCP server provides access to all current Capacities API endpoints:
 - **List Spaces** - Get all your personal spaces
 - **Space Information** - Retrieve detailed space structures and collections
 - **Search Content** - Search across spaces with advanced filtering
+- **Read Object Content** - Retrieve full note content by object ID (uses search API workaround)
 - **Save Weblinks** - Save URLs to your spaces with metadata
 - **Daily Notes** - Add content to your daily notes
 
@@ -143,6 +144,17 @@ Add markdown content to today's daily note in a space.
 - **mdText**: Markdown content to add
 - **origin** (optional): Origin label for the content (only "commandPalette" is supported)
 - **noTimestamp** (optional): If true, no timestamp will be added to the note
+
+### `capacities_read_object_content`
+Retrieve the full content of a Capacities object by its ID.
+- **objectId**: UUID of the object to retrieve (can be obtained from 'Copy object reference' in Capacities)
+- **spaceId**: UUID of the space containing the object
+- **title** (optional): The title or partial title of the object - strongly recommended to improve search results
+- **How it works**:
+  1. First attempts to use undocumented GET endpoints for direct object retrieval
+  2. Falls back to search API, aggregating content from highlights and snippets
+  3. Filters search results by object ID to find exact match
+- **Note**: When using search fallback, content may be incomplete as it's assembled from search snippets. Providing the title parameter significantly improves results.
 
 ## Rate Limits
 

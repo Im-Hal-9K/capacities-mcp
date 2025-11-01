@@ -4,6 +4,7 @@ import { FastMCP } from "fastmcp";
 import {
 	getSpaceInfoTool,
 	listSpacesTool,
+	readObjectContentTool,
 	saveToDailyNoteTool,
 	saveWeblinkTool,
 	searchTool,
@@ -24,6 +25,7 @@ const server = new FastMCP({
 server.addTool(listSpacesTool);
 server.addTool(getSpaceInfoTool);
 server.addTool(searchTool);
+server.addTool(readObjectContentTool);
 server.addTool(saveWeblinkTool);
 server.addTool(saveToDailyNoteTool);
 
