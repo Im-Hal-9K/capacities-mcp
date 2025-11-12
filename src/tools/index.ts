@@ -4,3 +4,7 @@ export { searchTool } from "./search.js";
 export { saveWeblinkTool } from "./saveWeblink.js";
 export { saveToDailyNoteTool } from "./saveToDailyNote.js";
 export { readObjectContentTool } from "./readObjectContent.js";
+export { createObjectTool } from "./createObject.js";
+export { updateObjectTool } from "./updateObject.js";
+export { deleteObjectTool } from "./deleteObject.js";
+export { batchOperationsTool } from "./batchOperations.js";

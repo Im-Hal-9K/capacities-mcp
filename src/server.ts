@@ -2,12 +2,16 @@
 import { FastMCP } from "fastmcp";
 
 import {
+	batchOperationsTool,
+	createObjectTool,
+	deleteObjectTool,
 	getSpaceInfoTool,
 	listSpacesTool,
 	readObjectContentTool,
 	saveToDailyNoteTool,
 	saveWeblinkTool,
 	searchTool,
+	updateObjectTool,
 } from "./tools/index.js";
 
 import {
@@ -28,6 +32,10 @@ server.addTool(searchTool);
 server.addTool(readObjectContentTool);
 server.addTool(saveWeblinkTool);
 server.addTool(saveToDailyNoteTool);
+server.addTool(createObjectTool);
+server.addTool(updateObjectTool);
+server.addTool(deleteObjectTool);
+server.addTool(batchOperationsTool);
 
 // Register all prompts
 server.addPrompt(dailySummaryPrompt);

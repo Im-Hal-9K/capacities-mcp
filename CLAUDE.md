@@ -28,6 +28,7 @@ cp .env.example .env
 
 ## Available Tools
 
+### Read Operations
 - `capacities_list_spaces` - Get user's personal spaces
 - `capacities_get_space_info` - Get structures and collections for a space
 - `capacities_search` - Search content across spaces
@@ -37,11 +38,30 @@ cp .env.example .env
   - How it works: Tries undocumented endpoints first, then falls back to search API aggregation
   - Note: Providing `title` parameter greatly improves search results
   - Returns aggregated content from search snippets when direct endpoint unavailable
+
+### Write Operations
 - `capacities_save_weblink` - Save a web link to a space
   - Parameters: `titleOverwrite`, `descriptionOverwrite`, `tags`, `mdText`
 - `capacities_save_to_daily_note` - Add text to today's daily note
   - `origin` only accepts "commandPalette"
   - Use `noTimestamp: true` to skip timestamp
+
+### CRUD Operations
+- `capacities_create_object` - Create a new object (entry) in a space
+  - Parameters: `spaceId`, `typeId`, `title`, `mdText` (optional), `properties` (optional)
+  - Use `capacities_get_space_info` to find available type IDs and property definitions
+- `capacities_update_object` - Update an existing object
+  - Parameters: `spaceId`, `objectId`, `title` (optional), `mdText` (optional), `properties` (optional)
+  - At least one field must be provided
+  - Note: `mdText` replaces existing content, does not append
+- `capacities_delete_object` - Delete an object from a space
+  - Parameters: `spaceId`, `objectId`
+  - Warning: This action is permanent and cannot be undone
+- `capacities_batch_operations` - Perform multiple create/update/delete operations in one call
+  - Parameters: `spaceId`, `operations` (array of operation objects)
+  - Each operation must specify: `operation` (create/update/delete) and required fields
+  - Maximum 100 operations per batch
+  - More efficient than individual calls for bulk operations
 
 ## Available Prompts
 
