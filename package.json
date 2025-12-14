@@ -1,6 +1,6 @@
 {
 	"name": "capacities-mcp-plus",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"main": "dist/server.js",
 	"bin": {
 		"capacities-mcp-plus": "dist/server.js"
@@ -17,13 +17,13 @@
 	},
 	"keywords": ["fastmcp", "mcp", "capacities"],
 	"repository": {
-		"url": "git+https://github.com/jemgold/capacities-mcp.git"
+		"url": "git+https://github.com/Im-Hal-9K/capacities-mcp.git"
 	},
-	"author": "Jem Gold <591643+jemgold@users.noreply.github.com>",
-	"homepage": "https://github.com/jemgold/capacities-mcp",
+	"author": "Im-Hal-9K",
+	"homepage": "https://github.com/Im-Hal-9K/capacities-mcp",
 	"type": "module",
 	"license": "MIT",
-	"description": "A MCP server for Capacities",
+	"description": "Enhanced MCP server for Capacities with read object content support",
 	"dependencies": {
 		"fastmcp": "^3.25.4",
 		"zod": "^3.24.4"

@@ -1,6 +1,24 @@
-# Capacities MCP Server
+# Capacities MCP Plus
 
-An MCP (Model Context Protocol) server for [Capacities](https://capacities.io), providing seamless integration with your knowledge management system.
+An enhanced MCP (Model Context Protocol) server for [Capacities](https://capacities.io), providing seamless integration with your knowledge management system.
+
+> **Note:** This is a fork of [jemgold/capacities-mcp](https://github.com/jemgold/capacities-mcp) with additional features and fixes.
+
+## What's Different from the Original
+
+| Feature | Original | Plus |
+|---------|----------|------|
+| **Read Object Content** | Not available | Retrieve full note content by object ID |
+| **fastmcp Version** | 1.27.3 | 3.25.4 (fixes MCP SDK compatibility) |
+| **Windows Support** | May have issues | Tested with cmd wrapper |
+| **npm Package** | `capacities-mcp` | `capacities-mcp-plus` |
+
+### New Tool: `capacities_read_object_content`
+
+Retrieve the full content of any Capacities object by its ID:
+- Tries undocumented API endpoints first for direct retrieval
+- Falls back to search API aggregation when direct access unavailable
+- Provides title parameter to improve search accuracy
 
 ## Features
 
@@ -9,22 +27,40 @@ This MCP server provides access to all current Capacities API endpoints:
 - **List Spaces** - Get all your personal spaces
 - **Space Information** - Retrieve detailed space structures and collections
 - **Search Content** - Search across spaces with advanced filtering
-- **Read Object Content** - Retrieve full note content by object ID (uses search API workaround)
+- **Read Object Content** - Retrieve full note content by object ID
 - **Save Weblinks** - Save URLs to your spaces with metadata
 - **Daily Notes** - Add content to your daily notes
 
 ## Installation
 
-### For Claude Desktop
+### For Claude Desktop (macOS)
 
-Add the Capacities MCP server to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "capacities": {
       "command": "npx",
-      "args": ["-y", "capacities-mcp"],
+      "args": ["-y", "capacities-mcp-plus"],
+      "env": {
+        "CAPACITIES_API_KEY": "your_capacities_api_key_here"
+      }
+    }
+  }
+}
+```
+
+### For Claude Desktop (Windows)
+
+Windows requires a cmd wrapper. Add to `%APPDATA%\Claude\claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "capacities": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "capacities-mcp-plus"],
       "env": {
         "CAPACITIES_API_KEY": "your_capacities_api_key_here"
       }
@@ -45,12 +81,14 @@ For local development, you'll need to clone and build the project:
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/jemgold/capacities-mcp.git
+git clone https://github.com/Im-Hal-9K/capacities-mcp.git
 cd capacities-mcp
 ```
 
 2. Install dependencies:
 ```bash
+npm install
+# or
 bun install
 ```
 
@@ -66,7 +104,7 @@ CAPACITIES_API_KEY=your_api_key_here
 
 5. Build the server:
 ```bash
-bun run build
+npm run build
 ```
 
 ### Running the Server
@@ -78,7 +116,7 @@ bun run dev
 
 For production use:
 ```bash
-bun run start
+npm run start
 ```
 
 To inspect the server tools and schema:
@@ -129,6 +167,17 @@ Search for content across your spaces with optional filtering.
 - **mode** (optional): "fullText" or "title" search mode
 - **filterStructureIds** (optional): Filter by specific structure types
 
+### `capacities_read_object_content`
+Retrieve the full content of a Capacities object by its ID.
+- **objectId**: UUID of the object to retrieve (can be obtained from 'Copy object reference' in Capacities)
+- **spaceId**: UUID of the space containing the object
+- **title** (optional): The title or partial title of the object - strongly recommended to improve search results
+- **How it works**:
+  1. First attempts to use undocumented GET endpoints for direct object retrieval
+  2. Falls back to search API, aggregating content from highlights and snippets
+  3. Filters search results by object ID to find exact match
+- **Note**: When using search fallback, content may be incomplete as it's assembled from search snippets. Providing the title parameter significantly improves results.
+
 ### `capacities_save_weblink`
 Save a web link to a space with optional metadata.
 - **spaceId**: UUID of the target space
@@ -144,17 +193,6 @@ Add markdown content to today's daily note in a space.
 - **mdText**: Markdown content to add
 - **origin** (optional): Origin label for the content (only "commandPalette" is supported)
 - **noTimestamp** (optional): If true, no timestamp will be added to the note
-
-### `capacities_read_object_content`
-Retrieve the full content of a Capacities object by its ID.
-- **objectId**: UUID of the object to retrieve (can be obtained from 'Copy object reference' in Capacities)
-- **spaceId**: UUID of the space containing the object
-- **title** (optional): The title or partial title of the object - strongly recommended to improve search results
-- **How it works**:
-  1. First attempts to use undocumented GET endpoints for direct object retrieval
-  2. Falls back to search API, aggregating content from highlights and snippets
-  3. Filters search results by object ID to find exact match
-- **Note**: When using search fallback, content may be incomplete as it's assembled from search snippets. Providing the title parameter significantly improves results.
 
 ## Rate Limits
 
@@ -188,6 +226,12 @@ Here are some example prompts you can use with Claude when this MCP server is co
 "Search for 'meeting notes' but only check titles, not full content"
 ```
 
+### Reading Content
+```
+"Read the content of object [object-id] from my research space"
+"Get the full note content for [title] in my workspace"
+```
+
 ### Saving Information
 ```
 "Save this article to my research space: https://example.com/article"
@@ -208,6 +252,11 @@ Here are some example prompts you can use with Claude when this MCP server is co
 "Save this research paper to my academic space and add it to today's daily note as well"
 "Find all my notes about 'AI tools' and then save the best ones as bookmarks"
 ```
+
+## Credits
+
+- Original project by [Jem Gold](https://github.com/jemgold/capacities-mcp)
+- Enhanced by [Im-Hal-9K](https://github.com/Im-Hal-9K/capacities-mcp)
 
 ## License
 
