@@ -1,9 +1,9 @@
 {
-	"name": "capacities-mcp",
-	"version": "1.0.3",
+	"name": "capacities-mcp-plus",
+	"version": "1.0.0",
 	"main": "dist/server.js",
 	"bin": {
-		"capacities-mcp": "dist/server.js"
+		"capacities-mcp-plus": "dist/server.js"
 	},
 	"scripts": {
 		"build": "tsc",
