@@ -1,5 +1,9 @@
 # Capacities MCP Plus
 
+<a href="https://glama.ai/mcp/servers/@Im-Hal-9K/Capacities-MCP-Plus">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@Im-Hal-9K/Capacities-MCP-Plus/badge" alt="Capacities MCP Plus on Glama" />
+</a>
+
 An enhanced MCP (Model Context Protocol) server for [Capacities](https://capacities.io), providing seamless integration with your knowledge management system.
 
 > **Note:** This is a fork of [jemgold/capacities-mcp](https://github.com/jemgold/capacities-mcp) with additional features and fixes.

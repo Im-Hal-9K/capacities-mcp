@@ -1,0 +1,34 @@
+{
+  "name": "Capacities MCP Plus",
+  "description": "Enhanced MCP server for Capacities knowledge management. List spaces, search content, read full object content, save weblinks, and manage daily notes.",
+  "author": "Im-Hal-9K",
+  "repository": "https://github.com/Im-Hal-9K/capacities-mcp",
+  "npm": "capacities-mcp-plus",
+  "categories": ["knowledge-management", "note-taking", "productivity"],
+  "tools": [
+    {
+      "name": "capacities_list_spaces",
+      "description": "Get a list of all personal spaces in Capacities"
+    },
+    {
+      "name": "capacities_get_space_info",
+      "description": "Get detailed information about a specific space"
+    },
+    {
+      "name": "capacities_search",
+      "description": "Search for content across Capacities spaces"
+    },
+    {
+      "name": "capacities_read_object_content",
+      "description": "Retrieve the full content of a Capacities object by ID"
+    },
+    {
+      "name": "capacities_save_weblink",
+      "description": "Save a web link to a space with optional metadata"
+    },
+    {
+      "name": "capacities_save_to_daily_note",
+      "description": "Add markdown content to today's daily note"
+    }
+  ]
+}
