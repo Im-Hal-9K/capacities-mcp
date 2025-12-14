@@ -1,6 +1,6 @@
 {
 	"name": "capacities-mcp",
-	"version": "1.0.1",
+	"version": "1.0.3",
 	"main": "dist/server.js",
 	"bin": {
 		"capacities-mcp": "dist/server.js"
