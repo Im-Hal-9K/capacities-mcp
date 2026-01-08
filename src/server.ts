@@ -688,13 +688,12 @@ ${args.requiredSkills || ""}
 // Main server setup
 const server = new Server(
 	{
-		name: "Capacities",
+		name: "capacities-mcp",
 		version: "1.2.0",
 	},
 	{
 		capabilities: {
 			tools: {},
-			prompts: {},
 		},
 	},
 );
@@ -814,6 +813,7 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
 async function main() {
 	const transport = new StdioServerTransport();
 	await server.connect(transport);
+	console.error("Capacities MCP server running on stdio");
 }
 
 main().catch((error) => {
