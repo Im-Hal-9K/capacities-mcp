@@ -29,15 +29,6 @@
       }
     }
   },
-  "configuration": {
-    "properties": {
-      "CAPACITIES_API_KEY": {
-        "type": "string",
-        "description": "Your Capacities API key from https://app.capacities.io/settings/api",
-        "required": true
-      }
-    }
-  },
   "tools": [
     {
       "name": "capacities_list_spaces",
