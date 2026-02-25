@@ -6,7 +6,7 @@ import {
 	ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-import { API_BASE_URL, getApiKey, makeApiRequest } from "./api.js";
+import { makeApiRequest } from "./api.js";
 
 // Tool definitions
 const TOOLS = [
@@ -22,13 +22,29 @@ const TOOLS = [
 	{
 		name: "capacities_get_space_info",
 		description:
-			"Get detailed information about a specific Capacities space including structures and collections",
+			"Get information about a Capacities space's structures and collections. By default returns the full schema including all property definitions. Use 'summary' mode to get a lightweight listing of just structure names/IDs (saves context window). Use 'filterStructureIds' to fetch schema for only specific structures. Use 'excludeMediaTypes' to skip built-in media structures (Image, File, PDF, Weblink).",
 		inputSchema: {
 			type: "object" as const,
 			properties: {
 				spaceId: {
 					type: "string",
 					description: "The UUID of the space to get information for",
+				},
+				summary: {
+					type: "boolean",
+					description:
+						"If true, returns only structure names, IDs, and collection info — no property definitions. Much smaller payload, ideal for discovery/lookup. Default: false",
+				},
+				filterStructureIds: {
+					type: "array",
+					items: { type: "string" },
+					description:
+						"Only return structures matching these IDs. Use this when you only need the schema for specific structures (e.g. just 'Project' and 'Note').",
+				},
+				excludeMediaTypes: {
+					type: "boolean",
+					description:
+						"If true, excludes built-in media structures (Image, File, PDF, Weblink) whose schemas rarely change. Default: false",
 				},
 			},
 			required: ["spaceId"],
@@ -165,10 +181,65 @@ async function handleListSpaces(): Promise<string> {
 	return JSON.stringify(data, null, 2);
 }
 
-async function handleGetSpaceInfo(args: { spaceId: string }): Promise<string> {
+// Built-in media structure titles that can be excluded
+const MEDIA_STRUCTURE_TITLES = new Set(["image", "file", "pdf", "weblink"]);
+
+async function handleGetSpaceInfo(args: {
+	spaceId: string;
+	summary?: boolean;
+	filterStructureIds?: string[];
+	excludeMediaTypes?: boolean;
+}): Promise<string> {
 	const response = await makeApiRequest(`/space-info?spaceid=${args.spaceId}`);
-	const data = await response.json();
-	return JSON.stringify(data, null, 2);
+	const data = (await response.json()) as {
+		structures?: Array<{
+			id: string;
+			title: string;
+			pluralName: string;
+			labelColor: string;
+			propertyDefinitions: Array<{
+				id: string;
+				type: string;
+				dataType: string;
+				name: string;
+			}>;
+			collections: Array<{ id: string; title: string }>;
+		}>;
+	};
+
+	if (!data.structures) {
+		return JSON.stringify(data, null, 2);
+	}
+
+	let structures = data.structures;
+
+	// Filter to specific structure IDs if requested
+	if (args.filterStructureIds && args.filterStructureIds.length > 0) {
+		const filterSet = new Set(args.filterStructureIds);
+		structures = structures.filter((s) => filterSet.has(s.id));
+	}
+
+	// Exclude built-in media types if requested
+	if (args.excludeMediaTypes) {
+		structures = structures.filter(
+			(s) => !MEDIA_STRUCTURE_TITLES.has(s.title.toLowerCase()),
+		);
+	}
+
+	// Return summary (no property definitions) if requested
+	if (args.summary) {
+		const summary = structures.map((s) => ({
+			id: s.id,
+			title: s.title,
+			pluralName: s.pluralName,
+			labelColor: s.labelColor,
+			propertyCount: s.propertyDefinitions?.length ?? 0,
+			collections: s.collections,
+		}));
+		return JSON.stringify({ structures: summary }, null, 2);
+	}
+
+	return JSON.stringify({ structures }, null, 2);
 }
 
 async function handleSearch(args: {
@@ -180,7 +251,7 @@ async function handleSearch(args: {
 	const requestBody = {
 		searchTerm: args.searchTerm,
 		spaceIds: args.spaceIds,
-		...(args.mode && { mode: args.mode }),
+		mode: args.mode || "title",
 		...(args.filterStructureIds && {
 			filterStructureIds: args.filterStructureIds,
 		}),
@@ -200,66 +271,19 @@ async function handleReadObjectContent(args: {
 	spaceId: string;
 	title?: string;
 }): Promise<string> {
-	const apiKey = getApiKey();
-
-	// Try potential undocumented endpoints first
-	const potentialEndpoints = [
-		`/object/${args.objectId}`,
-		`/objects/${args.objectId}`,
-		`/content/${args.objectId}`,
-		`/space/${args.spaceId}/object/${args.objectId}`,
-	];
-
-	for (const endpoint of potentialEndpoints) {
-		try {
-			const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-				headers: {
-					Authorization: `Bearer ${apiKey}`,
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (response.ok) {
-				const data = await response.json();
-				return JSON.stringify(
-					{
-						note: `Successfully retrieved from undocumented endpoint: ${endpoint}`,
-						object: data,
-					},
-					null,
-					2,
-				);
-			}
-		} catch {
-			// Continue to next endpoint
-		}
-	}
-
-	// Fallback to search API approach
+	// Search for the object using the search API
 	const searchTerm = args.title || "*";
 
-	const requestBody = {
-		searchTerm: searchTerm,
-		spaceIds: [args.spaceId],
-		mode: "fullText" as const,
-	};
-
-	const searchResponse = await fetch(`${API_BASE_URL}/search`, {
+	const response = await makeApiRequest("/search", {
 		method: "POST",
-		headers: {
-			Authorization: `Bearer ${apiKey}`,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(requestBody),
+		body: JSON.stringify({
+			searchTerm: searchTerm,
+			spaceIds: [args.spaceId],
+			mode: "fullText",
+		}),
 	});
 
-	if (!searchResponse.ok) {
-		throw new Error(
-			`Search API error: ${searchResponse.status} ${searchResponse.statusText}`,
-		);
-	}
-
-	const data = (await searchResponse.json()) as {
+	const data = (await response.json()) as {
 		results?: Array<{
 			id?: string;
 			title?: string;
@@ -456,7 +480,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 				result = await handleListSpaces();
 				break;
 			case "capacities_get_space_info":
-				result = await handleGetSpaceInfo(args as { spaceId: string });
+				result = await handleGetSpaceInfo(
+					args as {
+						spaceId: string;
+						summary?: boolean;
+						filterStructureIds?: string[];
+						excludeMediaTypes?: boolean;
+					},
+				);
 				break;
 			case "capacities_search":
 				result = await handleSearch(
