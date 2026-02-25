@@ -27,8 +27,18 @@ export async function makeApiRequest(
 
 	if (!response.ok) {
 		const errorText = await response.text();
+		if (response.status === 500) {
+			throw new Error(
+				`Capacities API returned 500 Internal Server Error on ${endpoint}. This is a server-side issue with the Capacities API. Response: ${errorText}`,
+			);
+		}
+		if (response.status === 429) {
+			throw new Error(
+				`Capacities API rate limit exceeded on ${endpoint}. Please wait before retrying.`,
+			);
+		}
 		throw new Error(
-			`Capacities API error: ${response.status} ${response.statusText} - ${errorText}`,
+			`Capacities API error: ${response.status} ${response.statusText} on ${endpoint} - ${errorText}`,
 		);
 	}
 
