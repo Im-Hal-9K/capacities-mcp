@@ -53,7 +53,7 @@ const TOOLS = [
 	{
 		name: "capacities_search",
 		description:
-			"Search for content across Capacities spaces with optional filtering",
+			"Search for content across Capacities spaces with optional filtering. Uses the /lookup endpoint (title-based, faster) with fallback to legacy /search.",
 		inputSchema: {
 			type: "object" as const,
 			properties: {
@@ -83,7 +83,7 @@ const TOOLS = [
 	{
 		name: "capacities_read_object_content",
 		description:
-			"Retrieve the full content of a Capacities object by its ID. Optionally provide a title or search term to improve results. This tries undocumented endpoints first, then falls back to search API aggregation.",
+			"Retrieve the full content of a Capacities object by its ID. Providing a title is strongly recommended as the API uses title-based lookup. Falls back through multiple search strategies to find the object.",
 		inputSchema: {
 			type: "object" as const,
 			properties: {
@@ -257,10 +257,25 @@ async function handleSearch(args: {
 		}),
 	};
 
-	const response = await makeApiRequest("/search", {
-		method: "POST",
-		body: JSON.stringify(requestBody),
-	});
+	// Try /lookup first (replaces deprecated /search endpoint)
+	// Fall back to /search if /lookup returns 4xx (graceful migration)
+	let response: Response;
+	try {
+		response = await makeApiRequest("/lookup", {
+			method: "POST",
+			body: JSON.stringify(requestBody),
+		});
+	} catch (error) {
+		const errorMsg = error instanceof Error ? error.message : String(error);
+		if (errorMsg.includes("404") || errorMsg.includes("400")) {
+			response = await makeApiRequest("/search", {
+				method: "POST",
+				body: JSON.stringify(requestBody),
+			});
+		} else {
+			throw error;
+		}
+	}
 
 	const data = await response.json();
 	return JSON.stringify(data, null, 2);
@@ -271,17 +286,47 @@ async function handleReadObjectContent(args: {
 	spaceId: string;
 	title?: string;
 }): Promise<string> {
-	// Search for the object using the search API
+	// Search for the object using the lookup API (replaces deprecated /search)
 	const searchTerm = args.title || "*";
 
-	const response = await makeApiRequest("/search", {
-		method: "POST",
-		body: JSON.stringify({
-			searchTerm: searchTerm,
-			spaceIds: [args.spaceId],
-			mode: "fullText",
-		}),
-	});
+	// Try /lookup with fullText first, fall back to title mode, then legacy /search
+	let response: Response;
+	const baseBody = {
+		searchTerm: searchTerm,
+		spaceIds: [args.spaceId],
+	};
+
+	try {
+		response = await makeApiRequest("/lookup", {
+			method: "POST",
+			body: JSON.stringify({ ...baseBody, mode: "fullText" }),
+		});
+	} catch (error) {
+		const errorMsg = error instanceof Error ? error.message : String(error);
+		if (errorMsg.includes("404") || errorMsg.includes("400")) {
+			// fullText not supported on /lookup, try title mode
+			try {
+				response = await makeApiRequest("/lookup", {
+					method: "POST",
+					body: JSON.stringify({ ...baseBody, mode: "title" }),
+				});
+			} catch (innerError) {
+				const innerMsg =
+					innerError instanceof Error ? innerError.message : String(innerError);
+				if (innerMsg.includes("404") || innerMsg.includes("400")) {
+					// /lookup not available at all, fall back to legacy /search
+					response = await makeApiRequest("/search", {
+						method: "POST",
+						body: JSON.stringify({ ...baseBody, mode: "fullText" }),
+					});
+				} else {
+					throw innerError;
+				}
+			}
+		} else {
+			throw error;
+		}
+	}
 
 	const data = (await response.json()) as {
 		results?: Array<{
