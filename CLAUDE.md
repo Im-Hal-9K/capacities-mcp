@@ -31,12 +31,13 @@ cp .env.example .env
 - `capacities_list_spaces` - Get user's personal spaces
 - `capacities_get_space_info` - Get structures and collections for a space
 - `capacities_search` - Search content across spaces
-  - `mode` defaults to "title" if not specified
+  - Uses `/lookup` endpoint with fallback to legacy `/search`
+  - `mode` defaults to "title" if not specified; fullText may not be available on `/lookup`
 - `capacities_read_object_content` - Retrieve full content of an object by ID
   - Parameters: `objectId` (UUID), `spaceId` (UUID), `title` (optional string)
-  - How it works: Tries undocumented endpoints first, then falls back to search API aggregation
-  - Note: Providing `title` parameter greatly improves search results
-  - Returns aggregated content from search snippets when direct endpoint unavailable
+  - How it works: Tries `/lookup` with fullText → `/lookup` with title → legacy `/search` fallback
+  - Note: Providing `title` parameter is strongly recommended (lookup is title-based)
+  - Returns aggregated content from search snippets
 - `capacities_save_weblink` - Save a web link to a space
   - Parameters: `titleOverwrite`, `descriptionOverwrite`, `tags`, `mdText`
 - `capacities_save_to_daily_note` - Add text to today's daily note
@@ -53,6 +54,6 @@ cp .env.example .env
 
 - `/spaces`: 5 requests per 60 seconds
 - `/space-info`: 5 requests per 60 seconds  
-- `/search`: 120 requests per 60 seconds
+- `/lookup` (was `/search`): 120 requests per 60 seconds
 - `/save-weblink`: 10 requests per 60 seconds
 - `/save-to-daily-note`: 5 requests per 60 seconds

@@ -84,7 +84,7 @@ describe("API utilities", () => {
 			global.fetch = mock(() => Promise.resolve(mockResponse));
 
 			await expect(makeApiRequest("/test")).rejects.toThrow(
-				"Capacities API error: 400 Bad Request - Invalid request",
+				"Capacities API error: 400 Bad Request on /test - Invalid request",
 			);
 		});
 	});
