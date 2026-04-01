@@ -1,76 +1,70 @@
 {
-  "$schema": "../../dist/mcpb-manifest.schema.json",
-  "manifest_version": "0.3",
-  "name": "capacities-mcp",
-  "display_name": "Capacities",
-  "version": "1.2.0",
-  "description": "Connect Claude to your Capacities knowledge base for searching, reading, and saving content.",
-  "long_description": "Access your Capacities knowledge management system directly from Claude. Search across spaces, read object content, save weblinks, and add notes to your daily journal - all through natural language:\n* **Search your knowledge base** - Find content across all your Capacities spaces\n* **Read full content** - Retrieve the complete content of any object by ID\n* **Save weblinks** - Bookmark URLs with custom titles, descriptions, and tags\n* **Daily notes** - Add markdown content to today's daily note\n* **Space management** - List and explore your Capacities spaces and structures",
-  "author": {
-    "name": "Im-Hal-9K",
-    "url": "https://github.com/Im-Hal-9K"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Im-Hal-9K/capacities-mcp.git"
-  },
-  "homepage": "https://github.com/Im-Hal-9K/capacities-mcp",
-  "server": {
-    "type": "node",
-    "entry_point": "dist/server.js",
-    "mcp_config": {
-      "command": "node",
-      "args": [
-        "${__dirname}/dist/server.js"
-      ],
-      "env": {
-        "MCP_DXT": "true",
-        "NODE_ENV": "production"
-      }
-    }
-  },
-  "tools": [
-    {
-      "name": "capacities_list_spaces",
-      "description": "Get a list of all personal spaces in Capacities"
-    },
-    {
-      "name": "capacities_get_space_info",
-      "description": "Get detailed information about a specific Capacities space including structures and collections"
-    },
-    {
-      "name": "capacities_search",
-      "description": "Search for content across Capacities spaces with optional filtering"
-    },
-    {
-      "name": "capacities_read_object_content",
-      "description": "Retrieve the full content of a Capacities object by its ID"
-    },
-    {
-      "name": "capacities_save_weblink",
-      "description": "Save a web link to a Capacities space with optional title and tags"
-    },
-    {
-      "name": "capacities_save_to_daily_note",
-      "description": "Add markdown text to today's daily note in a Capacities space"
-    }
-  ],
-  "keywords": [
-    "knowledge-management",
-    "note-taking",
-    "productivity",
-    "capacities",
-    "pkm"
-  ],
-  "license": "MIT",
-  "compatibility": {
-    "platforms": [
-      "darwin",
-      "win32",
-      "linux"
-    ],
-    "runtimes": {
-      "node": ">=18.0.0"
-    }
-  }
+	"$schema": "../../dist/mcpb-manifest.schema.json",
+	"manifest_version": "0.3",
+	"name": "capacities-mcp",
+	"display_name": "Capacities",
+	"version": "1.2.0",
+	"description": "Connect Claude to your Capacities knowledge base for searching, reading, and saving content.",
+	"long_description": "Access your Capacities knowledge management system directly from Claude. Search across spaces, read object content, save weblinks, and add notes to your daily journal - all through natural language:\n* **Search your knowledge base** - Find content across all your Capacities spaces\n* **Read full content** - Retrieve the complete content of any object by ID\n* **Save weblinks** - Bookmark URLs with custom titles, descriptions, and tags\n* **Daily notes** - Add markdown content to today's daily note\n* **Space management** - List and explore your Capacities spaces and structures",
+	"author": {
+		"name": "Im-Hal-9K",
+		"url": "https://github.com/Im-Hal-9K"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Im-Hal-9K/capacities-mcp.git"
+	},
+	"homepage": "https://github.com/Im-Hal-9K/capacities-mcp",
+	"server": {
+		"type": "node",
+		"entry_point": "dist/server.js",
+		"mcp_config": {
+			"command": "node",
+			"args": ["${__dirname}/dist/server.js"],
+			"env": {
+				"MCP_DXT": "true",
+				"NODE_ENV": "production"
+			}
+		}
+	},
+	"tools": [
+		{
+			"name": "capacities_list_spaces",
+			"description": "Get a list of all personal spaces in Capacities"
+		},
+		{
+			"name": "capacities_get_space_info",
+			"description": "Get detailed information about a specific Capacities space including structures and collections"
+		},
+		{
+			"name": "capacities_search",
+			"description": "Search for content across Capacities spaces with optional filtering"
+		},
+		{
+			"name": "capacities_read_object_content",
+			"description": "Retrieve the full content of a Capacities object by its ID"
+		},
+		{
+			"name": "capacities_save_weblink",
+			"description": "Save a web link to a Capacities space with optional title and tags"
+		},
+		{
+			"name": "capacities_save_to_daily_note",
+			"description": "Add markdown text to today's daily note in a Capacities space"
+		}
+	],
+	"keywords": [
+		"knowledge-management",
+		"note-taking",
+		"productivity",
+		"capacities",
+		"pkm"
+	],
+	"license": "MIT",
+	"compatibility": {
+		"platforms": ["darwin", "win32", "linux"],
+		"runtimes": {
+			"node": ">=18.0.0"
+		}
+	}
 }
