@@ -1,0 +1,19 @@
+---
+globs: **/*.js
+alwaysApply: false
+---
+# Standard: JavaScript Best Practices
+
+This standard covers high-impact JavaScript patterns for robustness and safety: reliable async control flow, error propagation, resource cleanup, input validation, network timeouts and retries, config... :
+* Avoid async callbacks in Array.forEach/map without awaiting; use for...of for sequencing or Promise.all with explicit concurrency limits.
+* Avoid eval, Function, and dynamic import paths from untrusted data; use explicit dispatch maps for extensibility.
+* Centralize configuration loading and freeze the exported config object; disallow runtime mutation and avoid reading process.env throughout the codebase.
+* Guard shared mutable state across async boundaries with explicit ownership, atomics, or a single-writer queue; avoid read-modify-write on shared objects.
+* Propagate errors with original cause using Error options or rethrow; avoid catch blocks that only log or return defaults.
+* Release resources deterministically by awaiting stream completion and closing handles in finally; use pipeline/using patterns where available.
+* Retry only idempotent operations with bounded attempts, exponential backoff, and jitter; surface the final error without wrapping away the cause.
+* Set explicit timeouts and cancellation for every network or IPC request using AbortController and per-request deadlines.
+* Use structured logging with stable keys and redaction; avoid logging secrets or whole objects containing credentials.
+* Validate and normalize untrusted input at module boundaries using allowlists and type checks; reject extra fields and unexpected encodings.
+
+Full standard is available here for further request: [JavaScript Best Practices](../../../.packmind/standards/javascript-best-practices.md)

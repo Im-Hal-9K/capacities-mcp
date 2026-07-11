@@ -1,0 +1,106 @@
+{
+  "lockfileVersion": 2,
+  "packageSlugs": [
+    "@global/first-package"
+  ],
+  "agents": [
+    "agents_md",
+    "claude",
+    "codex",
+    "continue",
+    "cursor",
+    "opencode",
+    "packmind"
+  ],
+  "installedAt": "2026-07-11T15:32:21.285Z",
+  "targetId": "db9eef62-da7a-46f2-8636-7ae229998c13",
+  "artifacts": {
+    "user:standard:javascript-best-practices": {
+      "name": "JavaScript Best Practices",
+      "type": "standard",
+      "id": "4e0db468-4a60-4025-986f-4519020271f7",
+      "version": 1,
+      "spaceId": "d75c5635-e4cb-486a-bce0-871cf39d616e",
+      "packageIds": [
+        "1a7de045-5376-48dd-bc03-782c942637d8"
+      ],
+      "source": "user",
+      "files": [
+        {
+          "path": ".claude/rules/packmind/standard-javascript-best-practices.md",
+          "agent": "claude"
+        },
+        {
+          "path": ".continue/rules/packmind/standard-javascript-best-practices.md",
+          "agent": "continue"
+        },
+        {
+          "path": ".cursor/rules/packmind/standard-javascript-best-practices.mdc",
+          "agent": "cursor"
+        },
+        {
+          "path": ".packmind/standards/javascript-best-practices.md",
+          "agent": "packmind"
+        }
+      ]
+    },
+    "user:standard:sql-best-practices": {
+      "name": "SQL Best Practices",
+      "type": "standard",
+      "id": "44e6f1ad-cafe-4739-92eb-4ecb4d21f3a0",
+      "version": 1,
+      "spaceId": "d75c5635-e4cb-486a-bce0-871cf39d616e",
+      "packageIds": [
+        "1a7de045-5376-48dd-bc03-782c942637d8"
+      ],
+      "source": "user",
+      "files": [
+        {
+          "path": ".claude/rules/packmind/standard-sql-best-practices.md",
+          "agent": "claude"
+        },
+        {
+          "path": ".continue/rules/packmind/standard-sql-best-practices.md",
+          "agent": "continue"
+        },
+        {
+          "path": ".cursor/rules/packmind/standard-sql-best-practices.mdc",
+          "agent": "cursor"
+        },
+        {
+          "path": ".packmind/standards/sql-best-practices.md",
+          "agent": "packmind"
+        }
+      ]
+    },
+    "user:standard:typescript-best-practices": {
+      "name": "TypeScript Best Practices",
+      "type": "standard",
+      "id": "c2264b49-be17-473d-9ead-5a4bcbfd7633",
+      "version": 1,
+      "spaceId": "d75c5635-e4cb-486a-bce0-871cf39d616e",
+      "packageIds": [
+        "1a7de045-5376-48dd-bc03-782c942637d8"
+      ],
+      "source": "user",
+      "files": [
+        {
+          "path": ".claude/rules/packmind/standard-typescript-best-practices.md",
+          "agent": "claude"
+        },
+        {
+          "path": ".continue/rules/packmind/standard-typescript-best-practices.md",
+          "agent": "continue"
+        },
+        {
+          "path": ".cursor/rules/packmind/standard-typescript-best-practices.mdc",
+          "agent": "cursor"
+        },
+        {
+          "path": ".packmind/standards/typescript-best-practices.md",
+          "agent": "packmind"
+        }
+      ]
+    }
+  }
+}

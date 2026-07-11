@@ -1,0 +1,16 @@
+# TypeScript Best Practices
+
+This standard covers high-impact TypeScript patterns for runtime boundaries, error and async handling, resource lifecycle, configuration access, logging, retries/timeouts, concurrency safety, and test isolation using core language features.
+
+## Rules
+
+* Validate all untrusted inputs at module boundaries using runtime schemas and return typed values; avoid casting unknown data to domain types.
+* Use typed errors or discriminated Result types for expected failures; avoid throwing raw strings or relying on message matching.
+* Set explicit timeouts and cancellation for all network or long-running async operations using AbortSignal; avoid Promises that can hang indefinitely.
+* Implement retries only for idempotent operations with bounded attempts and backoff; avoid unbounded loops or retrying non-idempotent side effects.
+* Manage resources with deterministic cleanup using try/finally or using; avoid leaving timers, event listeners, streams, or file handles open.
+* Use structured logging with stable keys and include error stack and correlation context; avoid concatenated strings and logging only error.message.
+* Model config access with a typed loader that validates required keys and parses types; avoid reading process.env directly across the codebase.
+* Type async callbacks as returning Promise<void> and handle rejections at the boundary; avoid floating Promises inside event handlers and timers.
+* Prefer immutable data with readonly and avoid exporting mutable singletons; isolate shared state behind functions or classes with explicit update methods.
+* Keep tests isolated by controlling time, randomness, and global state; avoid tests that depend on real timeouts, Math.random, or shared module singletons.
